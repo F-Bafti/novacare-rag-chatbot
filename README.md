@@ -204,3 +204,51 @@ entirely on GPU. CAGRA builds a proximity graph over all vectors and
 traverses it during search, delivering 10-100x faster retrieval than
 FAISS for large corpora. The code is architected so this is a one-line
 swap.
+
+## Evaluation
+
+To measure the real value of RAG we compared two systems on the same
+10 questions — a pure LLM baseline with no retrieval, and our full RAG
+pipeline. The questions were designed to have exact answers that can only
+be found in the NovaCare FAQ document.
+
+### Why this evaluation is reliable
+
+The FAQ was written by us specifically for this project. The exact numbers
+— premiums, deductibles, copays, grace periods — do not exist anywhere on
+the internet. The LLM has never seen this data during training. This
+guarantees that any correct answer from the RAG system came from retrieval,
+not from memorized training data. Grading was done by the author of the FAQ
+who knows every correct answer with certainty.
+
+### Results
+
+| # | Question | Baseline | RAG |
+|---|---|---|---|
+| Q1 | Monthly premium for NovaCare Plus | FAIL | PASS |
+| Q2 | Deductible for NovaCare Elite | FAIL | PASS |
+| Q3 | Therapy sessions covered by Basic | FAIL | PASS |
+| Q4 | ER copay for NovaCare Plus | FAIL | PASS |
+| Q5 | Days to add a newborn to the plan | FAIL | PASS |
+| Q6 | Generic medication copay | FAIL | PASS |
+| Q7 | Number of states NovaCare operates in | FAIL | PASS |
+| Q8 | Grace period for late payments | FAIL | PASS |
+| Q9 | NovaCare Rewards points value | FAIL | FAIL |
+| Q10 | Out-of-pocket maximum for Basic | FAIL | PASS |
+| | **SCORE** | **0/10** | **9/10** |
+
+### Key findings
+
+The baseline LLM scored zero on all questions because the data is completely
+unseen. On Q7 it confused NovaCare with Novant Health — a real company —
+showing how LLMs hallucinate confidently when they don't know the answer.
+
+RAG scored 9/10. The one failure (Q9) was a retrieval miss where the
+grade_question node incorrectly deflected a valid NovaCare question about
+the rewards program.
+
+### Production improvements
+
+Replacing FAISS with cuVS CAGRA would give 10-100x faster vector search
+on GPU. Replacing pandas with cuDF would accelerate the ingestion pipeline.
+Both are one-line swaps — the code is architected to make this trivial.

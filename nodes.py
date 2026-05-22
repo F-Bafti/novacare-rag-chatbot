@@ -18,7 +18,7 @@ llm = ChatOllama(model="llama3.2:3b", temperature=0)
 
 # ── Node 0: Grade Question ────────────────────────────────────────────────
 def grade_question(state: GraphState) -> GraphState:
-    """Check if the question is relevant to NVIDIA before doing anything."""
+    """Check if the question is relevant to NovaCare before doing anything."""
     question = state["question"]
 
     prompt = f"""You are a gatekeeper for NovaCare Health Insurance customer service chatbot.
@@ -41,7 +41,7 @@ def retrieve(state: GraphState) -> GraphState:
         embedder.embed_query(question), dtype=np.float32
     ).reshape(1, -1)
 
-    _, indices = index.search(q_embedding, k=10)
+    _, indices = index.search(q_embedding, k=5)
     docs = df.iloc[indices[0]]["text"].tolist()
 
     return {**state, "documents": docs}

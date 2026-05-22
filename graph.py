@@ -23,7 +23,7 @@ workflow.add_node("deflect",          deflect)
 # ── Entry point ───────────────────────────────────────────────────────────
 workflow.set_entry_point("grade_question")
 
-# ── Edge 1: is the question NVIDIA-related? ───────────────────────────────
+# ── Edge 1: is the question NOVA-related? ───────────────────────────────
 workflow.add_conditional_edges(
     "grade_question",
     lambda state: "retrieve" if state["is_relevant"] else "deflect",
