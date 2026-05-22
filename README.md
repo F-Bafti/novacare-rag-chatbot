@@ -123,3 +123,84 @@ from web pages, academic papers, books, and conversation data. The training
 objective is contrastive loss — similar texts are pulled closer together in
 vector space and dissimilar texts are pushed apart. This is different from
 LLMs which are trained to predict the next token.
+
+## Architecture
+
+This chatbot is built with LangGraph — a framework for building stateful
+AI pipelines as graphs. Instead of a simple linear chain (retrieve → generate),
+we build a graph where each node can make decisions and route to different
+nodes based on the result. This pattern is called Self-RAG.
+
+### Shared State
+
+Every node in the graph reads from and writes to a shared state object.
+This state travels through the entire graph and carries all the information
+needed at each step.
+
+| Field | Type | Description |
+|---|---|---|
+| question | string | the user's original question |
+| documents | list | retrieved chunks from FAISS |
+| generation | string | the LLM's generated answer |
+| is_relevant | boolean | did retrieved docs pass grading? |
+| is_grounded | boolean | is the answer grounded in the docs? |
+| retries | integer | how many times we tried to generate |
+
+### Graph Nodes
+
+The graph has 6 nodes each responsible for one task.
+
+grade_question checks if the question is related to NovaCare. If not,
+the graph routes to deflect immediately without doing any retrieval.
+
+retrieve searches the FAISS index for the top 10 most similar chunks
+to the user's question using vector similarity.
+
+grade_documents checks if the retrieved chunks are actually relevant
+to the question. If not, the graph routes to deflect.
+
+generate sends the retrieved chunks and the question to the LLM and
+produces an answer.
+
+grade_generation checks if the answer is grounded in the retrieved
+chunks and not hallucinated. If not, the graph routes back to generate
+and tries again up to 3 times.
+
+deflect returns a polite message telling the user the question is
+outside the scope of NovaCare customer service.
+
+### Graph Flow
+![LangGraph pipeline](assets/novacare_rag_graph.svg)
+
+### Retry Logic
+
+The retry counter is incremented inside the generate node on every call.
+The grade_generation node checks two conditions to decide where to go next.
+If the answer is grounded it goes to END. If retries reaches 3 it also goes
+to END to avoid infinite loops. Otherwise it routes back to generate for
+another attempt.
+
+## Retrieval
+
+At query time the user question goes through the exact same embedding
+pipeline as the chunks — tokenize, attention, mean pooling — producing
+one 768-dim query vector. This vector is compared against all 21 chunk
+vectors in FAISS using L2 distance. The 10 most similar chunks are
+returned and passed to the LLM as context.
+
+### Why L2 distance
+
+L2 distance measures the straight line distance between two vectors in
+768-dimensional space. Chunks that are semantically similar to the question
+will have embeddings that are close together and therefore have a small L2
+distance. FAISS searches all 21 vectors and returns the ones with the
+smallest distance.
+
+### Production upgrade
+
+In production this FAISS index would be replaced with cuVS CAGRA —
+NVIDIA's graph-based Approximate Nearest Neighbor algorithm that runs
+entirely on GPU. CAGRA builds a proximity graph over all vectors and
+traverses it during search, delivering 10-100x faster retrieval than
+FAISS for large corpora. The code is architected so this is a one-line
+swap.
