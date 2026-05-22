@@ -17,3 +17,5 @@ __pycache__/
 # Models (too large for GitHub)
 *.gguf
 *.bin
+.vscode/
+__pycache__/
