@@ -1,0 +1,19 @@
+# Large data files
+data/embeddings.npy
+data/faiss.index
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Conda
+*.egg-info/
+
+# VSCode
+.vscode/
+
+# Models (too large for GitHub)
+*.gguf
+*.bin

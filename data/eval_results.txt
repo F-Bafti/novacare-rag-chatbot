@@ -1,0 +1,211 @@
+NVIDIA RAG CHATBOT — EVALUATION RESULTS
+Judge: Claude / GPT-4 (external)
+======================================================================
+
+INSTRUCTIONS FOR JUDGE:
+For each question, grade Baseline and RAG as PASS or FAIL.
+A PASS means the answer is factually correct and complete.
+A FAIL means the answer is wrong, hallucinated, or says 'I don't know'.
+======================================================================
+
+Q1: What is the monthly premium for NovaCare Plus?
+Reference: NovaCare Plus monthly premium is $334
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Plus! However, I need to clarify that the monthly premium for NovaCare Plus can vary depending on several factors such as your location, age, and plan details.
+
+That being said, I can provide you with some general information. The monthly premium for NovaCare Plus is typically around $50-$100 per month, but it may be higher or lower depending on your specific situation.
+
+To get a more accurate estimate of the premium, I would recommend checking our website or contacting one of our customer service representatives directly. They can provide you with personalized quotes and help you understand what's included in the plan.
+
+Additionally, NovaCare Plus is a Medicare Advantage plan that offers additional benefits such as dental, vision, and hearing coverage, which may affect the overall premium.
+
+Would you like me to look up more information on NovaCare Plus or assist you with anything else?
+
+RAG ANSWER:
+The monthly premium for NovaCare Plus is $334.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q2: What is the deductible for NovaCare Elite?
+Reference: NovaCare Elite deductible is $850 per year
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Elite. However, I need to clarify that I don't have real-time access to specific plan details, including deductibles.
+
+That being said, I can suggest a few options to help you find the information you're looking for:
+
+1. Check your insurance documents: You should have received a summary of coverage document or an enrollment packet when you signed up for NovaCare Elite. This document should include the deductible amount.
+2. Log in to your online account: If you have an online account with your health insurance provider, you may be able to log in and view your plan details, including the deductible amount.
+3. Contact your insurance provider directly: You can reach out to your insurance provider's customer service department directly and ask about the deductible for NovaCare Elite. They should be able to provide you with the most up-to-date information.
+
+I hope this helps! If you have any other questions or need further assistance, feel free to ask.
+
+RAG ANSWER:
+The deductible for NovaCare Elite is $850 per year.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q3: How many therapy sessions does NovaCare Basic cover per year?
+Reference: NovaCare Basic covers up to 20 therapy sessions per year
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Basic coverage.
+
+According to the information I have, NovaCare Basic typically covers up to 30 therapy sessions per calendar year for mental health services, including individual and group therapy. However, please note that this benefit may be subject to change or variation depending on your specific plan details and any applicable network restrictions.
+
+To confirm the exact number of covered therapy sessions for your NovaCare Basic plan, I recommend checking your policy documents or contacting our customer service team directly. We can provide you with more detailed information about your coverage and answer any other questions you may have.
+
+RAG ANSWER:
+According to Q3, NovaCare Basic covers up to 20 sessions per year with in-network providers.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q4: What is the ER copay for NovaCare Plus?
+Reference: NovaCare Plus ER copay is $200 per visit waived if admitted
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Plus. However, I need to check on some information.
+
+After verifying, I found that the Emergency Room (ER) copay for NovaCare Plus varies depending on the state and plan details. Could you please provide me with more information or context about your specific plan, such as the state you're in or the exact plan name?
+
+I'll do my best to look up the most accurate information for you.
+
+RAG ANSWER:
+The ER copay for NovaCare Plus is $200 per visit (waived if admitted).
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q5: How many days do I have to add a newborn to my plan?
+Reference: 31 days to add a newborn as a dependent
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'd be happy to help you with that information.
+
+The specific timeframe for adding a newborn to your plan can vary depending on the insurance provider and the type of plan you have. However, in general, most health insurance plans allow you to add dependents, including newborns, within a certain period after birth.
+
+Typically, this timeframe is 30-60 days after the child's birth. During this time, you may be able to add your newborn as a dependent to your plan without any additional premium costs or underwriting requirements.
+
+To confirm the specific details for your plan, I would recommend checking your insurance policy documents or contacting our customer service team directly. We can look up your account information and provide more detailed guidance on how to add your newborn to your plan within the allowed timeframe.
+
+Would you like me to check on that for you?
+
+RAG ANSWER:
+According to Q4 in the context, you must add a dependent (newborn) as a dependent within 31 days of birth to continue coverage.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q6: What is the generic medication copay?
+Reference: Generic medication copay is $12
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+Our company's generic medication copay varies depending on the specific plan and coverage. However, I can provide you with some general information.
+
+For our most basic plans, the generic medication copay is typically $10-$15 per prescription fill. However, for our more comprehensive plans, the copay may be lower, around $5-$10 per prescription fill.
+
+To give you a better idea, here are some examples of generic medication copays for our different plans:
+
+* Basic Plan: $12.50 per prescription fill
+* Preferred Plan: $8.00 per prescription fill
+* Premium Plan: $6.00 per prescription fill
+
+Please note that these prices are subject to change and may not reflect any additional discounts or promotions that may be available.
+
+If you're unsure about your specific copay, I recommend checking your policy documents or contacting our customer service team directly for more information. We'd be happy to help you with any questions or concerns you may have!
+
+RAG ANSWER:
+The generic medication copay under NovaCare plans is $12.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q7: How many states does NovaCare operate in?
+Reference: NovaCare operates in 38 states
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm not aware of any information about a company called "NovaCare" operating in the United States. However, I do know that Novant Health is a large healthcare organization that operates in several states.
+
+Novant Health is a non-profit health system with operations in North Carolina and Virginia. They have hospitals, clinics, and other healthcare facilities across these two states.
+
+RAG ANSWER:
+NovaCare operates in 38 states across the United States.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q8: What is the grace period for late premium payments?
+Reference: 31-day grace period for late premium payments
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+Our company's policy allows for a 30-day grace period for late premium payments. This means that if you're due to make a payment and it's past the due date, you'll have an additional 30 days to make the payment without incurring any late fees or penalties.
+
+However, please note that this grace period may vary depending on your specific plan and coverage type. I recommend checking your policy documents or contacting our customer service team for more information on your specific situation.
+
+Additionally, if you're experiencing financial difficulties and are having trouble making premium payments, we offer a few options to help, such as:
+
+* Payment plans: We can work with you to set up a payment plan that fits your budget.
+* Financial assistance programs: Depending on your income level and other factors, you may be eligible for financial assistance programs that can help reduce your premium costs.
+
+Would you like me to look into those options further?
+
+RAG ANSWER:
+According to Q16 in the context provided, NovaCare provides a 31-day grace period for late premium payments. If payment is not received within 31 days of the due date, coverage is suspended. If payment is not received within 60 days, the policy is terminated. To reinstate a terminated policy, you must reapply during the next Open Enrollment period.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q9: How much is the NovaCare Rewards points worth in premium discount?
+Reference: 1000 points equals $10 off monthly premium up to $120 per year
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Rewards.
+
+Unfortunately, I don't have real-time access to the current rewards program details or the specific point values associated with premium discounts. However, I can suggest a few options for you to find out the information:
+
+1. Check our website: You can visit our official website and look for the NovaCare Rewards section, where you may be able to find the most up-to-date information on the rewards program.
+2. Contact our customer service team: I can try to provide more general information about the rewards program, but for the most accurate and detailed information, I recommend reaching out to our customer service team directly. They should be able to provide you with the specific point values associated with premium discounts.
+3. Check your policy documents: If you have a copy of your NovaCare insurance policy documents, you may be able to find information on the rewards program and its associated point values.
+
+I hope this helps, and please let me know if there's anything else I can assist you with!
+
+RAG ANSWER:
+I'm sorry, I can only answer questions about NovaCare Health Insurance. Please ask something related to our plans, coverage, claims, or policies.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
+Q10: What is the out-of-pocket maximum for NovaCare Basic?
+Reference: NovaCare Basic out-of-pocket maximum is $8,700
+──────────────────────────────────────────────────────────────────────
+BASELINE ANSWER:
+I'm happy to help you with your question about NovaCare Basic.
+
+However, I need to clarify that I don't have real-time access to the most up-to-date information on our plans and their details. But I can suggest some options to find the out-of-pocket maximum for NovaCare Basic:
+
+1. Check your insurance documents: You should have received a summary of coverage document or an enrollment packet when you signed up for NovaCare Basic. This document should outline the plan's benefits, including the out-of-pocket maximum.
+2. Log in to your online account: If you have an online account with us, you can log in and check your plan details, including the out-of-pocket maximum.
+3. Contact our customer service team: I can try to look up the information for you, but please note that it may take a few minutes. You can call or chat with me directly, and I'll do my best to provide you with the information you need.
+
+Please keep in mind that the out-of-pocket maximum is subject to change, so it's always a good idea to verify the information with us directly.
+
+RAG ANSWER:
+The out-of-pocket maximum for NovaCare Basic is $8,700. Once you reach this amount, NovaCare covers 100% of covered services for the remainder of the year.
+
+BASELINE GRADE: [ PASS / FAIL ]
+RAG GRADE:      [ PASS / FAIL ]
+======================================================================
+
