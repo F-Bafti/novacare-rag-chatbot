@@ -1,3 +1,4 @@
+
 # 🏥 NovaCare RAG Chatbot
 
 ## Overview
@@ -52,43 +53,6 @@ finds a chunk, it finds the full answer.
 | Context preserved | Always | Often split |
 | Retrieval quality | High | Lower |
 
-
-## Embeddings
-
-To retrieve relevant chunks we need to convert text into numbers that
-capture meaning. This is done by an embedding model.
-
-### How it works
-
-The embedding model processes one chunk at a time. Internally it splits
-the text into tokens and uses self-attention so every token attends to
-every other token within the same chunk. After all the attention layers,
-all token vectors are averaged together into a single vector of 768 numbers.
-This final vector represents the meaning of the entire chunk.
-
-Our 21 chunks become 21 vectors of 768 dimensions each, stored in a matrix
-of shape (21 x 768). This matrix is what we search at query time.
-
-### Why nomic-embed-text
-
-We chose nomic-embed-text because it is free, runs fully locally via Ollama,
-and has strong performance on retrieval benchmarks. It was trained on 235
-million text pairs from diverse sources including web pages, academic papers,
-and books. It supports a context window of 8192 tokens which is more than
-enough for our FAQ chunks.
-
-### Limitation
-
-The embedding model only sees one chunk at a time. It has no awareness of
-other chunks in the document. For our NovaCare FAQ this is not a problem
-because each Q&A pair is completely self-contained.
-
-## Language Model
-
-For answer generation we use llama3.2:3b — a 3 billion parameter model
-developed by Meta and running locally via Ollama. It is free, requires no
-API key, and fits in 12GB VRAM in full 16-bit precision.
-
 ## Embedding
 
 After chunking, each chunk is converted into a single vector that captures
@@ -96,14 +60,15 @@ its meaning. This is done by the embedding model nomic-embed-text.
 
 ### How it works
 
-The chunk is first split into tokens by the tokenizer. Each token gets a
-vector from a frozen lookup table learned during training. These token
-vectors then pass through transformer layers where every token attends to
-every other token within the same chunk — building a contextual
-representation. At the end, all token vectors are averaged together
-(mean pooling) into one single vector of 768 numbers that represents
-the meaning of the entire chunk. This process runs for all 21 chunks
-producing a matrix of shape (21 x 768) stored in FAISS for retrieval.
+The embedding model processes one chunk at a time. The chunk is first split
+into tokens by the tokenizer. Each token gets a vector from a frozen lookup
+table learned during training. These token vectors then pass through
+transformer layers where every token attends to every other token within
+the same chunk — building a contextual representation. At the end, all
+token vectors are averaged together (mean pooling) into one single vector
+of 768 numbers that represents the meaning of the entire chunk. This process
+runs for all 21 chunks producing a matrix of shape (21 x 768) stored in
+FAISS for retrieval.
 
 ### Model details
 
@@ -124,18 +89,57 @@ objective is contrastive loss — similar texts are pulled closer together in
 vector space and dissimilar texts are pushed apart. This is different from
 LLMs which are trained to predict the next token.
 
+### Limitation
+
+The embedding model only sees one chunk at a time. It has no awareness of
+other chunks in the document. For our NovaCare FAQ this is not a problem
+because each Q&A pair is completely self-contained.
+
+## Language Model
+
+For answer generation we use llama3.2:3b — a 3 billion parameter model
+developed by Meta and running locally via Ollama. It is free, requires no
+API key, and fits in 12GB VRAM in full 16-bit precision. We also tested
+llama3.1:8b which uses 4-bit quantization (8B x 4 bits / 8 = 4GB on disk)
+and produces more accurate answers at the cost of speed.
+
+Both models run entirely on the local GPU with no internet connection needed
+after the initial download.
+
 ## Architecture
 
-This chatbot is built with LangGraph — a framework for building stateful
-AI pipelines as graphs. Instead of a simple linear chain (retrieve → generate),
-we build a graph where each node can make decisions and route to different
-nodes based on the result. This pattern is called Self-RAG.
+The chatbot is built as a stateful graph using LangGraph. Instead of a
+simple linear chain, each node makes a decision and routes to the next
+node based on the result. This pattern is called Self-RAG.
+
+![LangGraph pipeline](assets/novacare_rag_graph.svg)
+
+The graph has six nodes. Purple nodes make decisions. Teal nodes do work.
+The coral node handles off-topic questions.
+
+grade_question checks if the question is related to NovaCare. Off-topic
+questions are immediately routed to deflect without any retrieval.
+
+retrieve searches the FAISS index for the 10 most similar chunks to the
+user question using vector similarity search.
+
+grade_documents checks if the retrieved chunks are actually relevant to
+the question. If not, routes to deflect.
+
+generate sends the retrieved chunks and the question to the LLM and
+produces an answer using them as context.
+
+grade_generation checks if the answer is grounded in the retrieved chunks
+and not hallucinated. If not, routes back to generate and tries again up
+to 3 times.
+
+deflect returns a polite message telling the user the question is outside
+the scope of NovaCare customer service.
 
 ### Shared State
 
-Every node in the graph reads from and writes to a shared state object.
-This state travels through the entire graph and carries all the information
-needed at each step.
+Every node reads from and writes to a shared state object that travels
+through the entire graph.
 
 | Field | Type | Description |
 |---|---|---|
@@ -145,32 +149,6 @@ needed at each step.
 | is_relevant | boolean | did retrieved docs pass grading? |
 | is_grounded | boolean | is the answer grounded in the docs? |
 | retries | integer | how many times we tried to generate |
-
-### Graph Nodes
-
-The graph has 6 nodes each responsible for one task.
-
-grade_question checks if the question is related to NovaCare. If not,
-the graph routes to deflect immediately without doing any retrieval.
-
-retrieve searches the FAISS index for the top 10 most similar chunks
-to the user's question using vector similarity.
-
-grade_documents checks if the retrieved chunks are actually relevant
-to the question. If not, the graph routes to deflect.
-
-generate sends the retrieved chunks and the question to the LLM and
-produces an answer.
-
-grade_generation checks if the answer is grounded in the retrieved
-chunks and not hallucinated. If not, the graph routes back to generate
-and tries again up to 3 times.
-
-deflect returns a polite message telling the user the question is
-outside the scope of NovaCare customer service.
-
-### Graph Flow
-![LangGraph pipeline](assets/novacare_rag_graph.svg)
 
 ### Retry Logic
 
@@ -252,3 +230,43 @@ the rewards program.
 Replacing FAISS with cuVS CAGRA would give 10-100x faster vector search
 on GPU. Replacing pandas with cuDF would accelerate the ingestion pipeline.
 Both are one-line swaps — the code is architected to make this trivial.
+
+## Setup and Run
+
+### Prerequisites
+
+NVIDIA GPU with 8GB+ VRAM, CUDA driver 535+, Miniconda, Ollama installed locally.
+
+### 1. Create environment
+
+conda create -n nvidia-rag python=3.11 -y
+conda activate nvidia-rag
+
+### 2. Install dependencies
+
+pip install langchain langchain-community langgraph langchain-ollama
+pip install langchain-text-splitters gradio faiss-cpu pypdf
+pip install requests beautifulsoup4 numpy pandas
+
+### 3. Pull models
+
+ollama pull nomic-embed-text
+ollama pull llama3.2:3b
+
+### 4. Start Ollama
+
+ollama serve
+
+### 5. Ingest documents
+
+python ingest.py
+
+### 6. Run the chatbot
+
+python app.py
+
+Open http://localhost:7860 in your browser.
+
+### 7. Run evaluation
+
+python evaluate.py
